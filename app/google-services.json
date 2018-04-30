@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "830904359252",
+    "firebase_url": "https://hipla-tcs.firebaseio.com",
+    "project_id": "hipla-tcs",
+    "storage_bucket": "hipla-tcs.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:830904359252:android:35445f7f820c471d",
+        "android_client_info": {
+          "package_name": "com.hipla.smartoffice_tcs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "830904359252-n51ck98mboed56sn932ppeb6a7htdb3r.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hipla.smartoffice_tcs",
+            "certificate_hash": "e8be914bec3993cd04e597f31eff035d01b821d0"
+          }
+        },
+        {
+          "client_id": "830904359252-ipphmuiohsuhnu14uk65bdqdu4rjq5pn.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDl_exB5TAoLE7XjaXt0eJ038PmigcCAyk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "830904359252-ipphmuiohsuhnu14uk65bdqdu4rjq5pn.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

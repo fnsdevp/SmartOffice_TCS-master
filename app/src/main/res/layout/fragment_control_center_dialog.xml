@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="fragment"
+            type="com.hipla.smartoffice_tcs.dialogs.ControlCenterDialog" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:padding="@dimen/m10"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_margin="@dimen/m10"
+                android:layout_toLeftOf="@+id/ll_third_floor"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/light_on"
+                    android:textSize="@dimen/text_big"
+                    android:textStyle="bold"/>
+
+                <Switch
+                    android:id="@+id/switch_light_on"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/text_green"
+                    android:layout_margin="@dimen/m5"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_third_floor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_margin="@dimen/m10"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/third"
+                    android:textSize="@dimen/text_big"
+                    android:textStyle="bold"/>
+
+                <Switch
+                    android:id="@+id/switch_third_floor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:buttonTint="@color/text_green"
+                    android:layout_margin="@dimen/m5"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_color_picker"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_220sdp"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/m10"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/open_map"
+            android:textSize="@dimen/text_big"
+            android:textStyle="bold"
+            android:textAllCaps="true"
+            android:textColor="@color/text_blue"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="@dimen/m15"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/m10">
+
+            <TextView
+                android:id="@+id/tv_open_door"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/open_door"
+                android:textSize="@dimen/text_big"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textColor="@color/text_blue"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/tv_reconnect"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/reconnect"
+                android:textSize="@dimen/text_big"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:textColor="@color/text_blue"
+                android:gravity="center"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</layout>

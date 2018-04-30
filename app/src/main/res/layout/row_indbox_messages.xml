@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/contactinfo_ll_parent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/m5"
+        android:background="@android:color/transparent"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <LinearLayout
+            android:id="@+id/ll_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tv_name"
+                android:layout_width="@dimen/m60"
+                android:layout_height="@dimen/m60"
+                android:textColor="@color/text_white"
+                android:textSize="@dimen/text_extra_larg"
+                android:textStyle="bold"
+                android:textAllCaps="true"
+                android:gravity="center"
+                android:background="@drawable/circle_blue"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_margin="@dimen/m5"
+            android:layout_toRightOf="@+id/ll_name"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/rl_date">
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User name"
+                android:textSize="@dimen/text_larg"
+                android:layout_marginLeft="@dimen/m10"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/text_black"
+                android:ellipsize="end"
+                android:singleLine="true"/>
+            <TextView
+                android:id="@+id/tv_message"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="User name"
+                android:textSize="@dimen/text_medium"
+                android:layout_marginLeft="@dimen/m10"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/text_light_gray"
+                android:ellipsize="end"
+                android:singleLine="true"
+                android:layout_marginTop="@dimen/m5"/>
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_date"
+            android:layout_width="@dimen/m60"
+            android:layout_height="@dimen/m60"
+            android:layout_margin="@dimen/m5"
+            android:background="@drawable/normal_card"
+            android:layout_alignParentRight="true">
+
+            <TextView
+                android:id="@+id/tv_day"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_above="@+id/tv_date"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/m5"
+                android:text="7"
+                android:textColor="@color/text_white"
+                android:textSize="@dimen/text_extra_extra_larg"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="@dimen/m10"
+                android:text="Jan 2018"
+                android:textColor="@color/text_white"
+                android:textSize="@dimen/text_small" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="2px"
+        android:layout_marginLeft="@dimen/m20"
+        android:background="@color/line_gray"/>
+
+</LinearLayout>

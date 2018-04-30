@@ -1,0 +1,104 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="fragment"
+            type="com.hipla.smartoffice_tcs.fragment.ScheduleMeetingFragment" />
+
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rl_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/rl_search_bar"
+            android:layout_marginTop="@dimen/m5"
+            android:layout_marginRight="@dimen/m10">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <LinearLayout
+                    android:id="@+id/llFixedMeeting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:onClick="@{ ()-> fragment.setFixedMeeting()}">
+
+                    <TextView
+                        android:id="@+id/tv_fixed_meetings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/_28sdp"
+                        android:gravity="center"
+                        android:text="@string/fixed_meeting"
+                        android:textColor="@color/text_blue"
+                        android:textSize="@dimen/text_medium"
+                        android:layout_marginLeft="@dimen/m10"
+                        android:layout_marginRight="@dimen/m10"/>
+
+                    <View
+                        android:id="@+id/line1"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/text_blue"
+                        android:layout_gravity="bottom"
+                        android:visibility="visible"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llFlexibleMeeting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_30sdp"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:onClick="@{()-> fragment.setFlexibleMeeting()}">
+
+                    <TextView
+                        android:id="@+id/tv_flexible_meetings"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/_28sdp"
+                        android:gravity="center"
+                        android:text="@string/flexible_meeting"
+                        android:textColor="@color/text_light_gray"
+                        android:textSize="@dimen/text_medium"
+                        android:layout_marginLeft="@dimen/m10"
+                        android:layout_marginRight="@dimen/m10" />
+
+                    <View
+                        android:id="@+id/line2"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/text_blue"
+                        android:layout_gravity="bottom"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/vp_meetings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/rl_filter"/>
+
+    </LinearLayout>
+
+
+</layout>

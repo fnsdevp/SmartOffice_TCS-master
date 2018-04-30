@@ -1,0 +1,160 @@
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <variable
+            name="fragment"
+            type="com.hipla.smartoffice_tcs.fragment.ManageMeetingFragment" />
+    </data>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/m50"
+            android:background="@drawable/inboxheader"
+            android:visibility="gone">
+
+            <RelativeLayout
+                android:id="@+id/rlsearch"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/m35"
+                android:layout_centerInParent="true"
+                android:layout_marginBottom="@dimen/m5"
+                android:layout_marginLeft="@dimen/m10"
+                android:layout_marginRight="@dimen/m10"
+                android:layout_marginTop="@dimen/m5"
+                android:layout_toLeftOf="@+id/tvcancel"
+                android:background="@drawable/inboxheader_serch">
+
+                <ImageView
+                    android:id="@+id/ivSearch"
+                    android:layout_width="@dimen/_20sdp"
+                    android:layout_height="@dimen/_20sdp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="@dimen/m10"
+                    android:src="@drawable/search_icon" />
+
+                <EditText
+                    android:id="@+id/etSpotlightSerch"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginLeft="@dimen/m5"
+                    android:layout_toRightOf="@+id/ivSearch"
+                    android:background="@android:color/transparent"
+                    android:hint="@string/spotlight_search"
+                    android:textColor="#20FFFFFF"
+                    android:textColorHint="#20FFFFFF" />
+
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/tvcancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerInParent="true"
+                android:layout_marginRight="@dimen/m10"
+                android:text="@string/cancel"
+                android:textColor="@color/text_black" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal"
+                android:layout_alignParentLeft="true">
+
+                <LinearLayout
+                    android:id="@+id/llmyappointment"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/_28sdp"
+                    android:orientation="vertical"
+                    android:onClick="@{()->fragment.selectMyAppointment()}">
+
+                    <TextView
+                        android:id="@+id/tv_myappointment"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/m30"
+                        android:gravity="center"
+                        android:text="@string/my_appointments"
+                        android:textColor="@color/text_blue"
+                        android:layout_marginLeft="@dimen/m10"
+                        android:layout_marginRight="@dimen/m10"/>
+
+                    <View
+                        android:id="@+id/line1"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/text_blue"
+                        android:layout_gravity="bottom"
+                        android:visibility="visible"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llRequestReceived"
+                    android:layout_width="wrap_content"
+                    android:layout_height="@dimen/m35"
+                    android:layout_marginLeft="@dimen/m7"
+                    android:orientation="vertical"
+                    android:onClick="@{()->fragment.selectRequestReceived()}">
+
+                    <TextView
+                        android:id="@+id/tv_request_received"
+                        android:layout_width="wrap_content"
+                        android:layout_height="@dimen/_28sdp"
+                        android:gravity="center"
+                        android:text="@string/request_received"
+                        android:textColor="@color/text_light_gray"/>
+
+                    <View
+                        android:id="@+id/line2"
+                        android:layout_width="match_parent"
+                        android:layout_height="2dp"
+                        android:background="@color/text_blue"
+                        android:layout_gravity="bottom"
+                        android:visibility="gone"/>
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tv_menu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="@string/filter"
+                android:textColor="@color/text_black"
+                android:textSize="@dimen/text_medium"
+                android:layout_marginRight="@dimen/m10"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/viewPager_manage_meetings"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/grey_bg_for_meeting_manage">
+
+        </android.support.v4.view.ViewPager>
+
+    </LinearLayout>
+
+</layout>
