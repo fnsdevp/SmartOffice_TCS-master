@@ -42,10 +42,8 @@ import com.hipla.smartoffice_tcs.networking.PostStringRequest;
 import com.hipla.smartoffice_tcs.networking.StringRequestListener;
 import com.hipla.smartoffice_tcs.utils.CONST;
 import com.hipla.smartoffice_tcs.utils.MarshmallowPermissionHelper;
-
 import org.json.JSONException;
 import org.json.JSONObject;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -720,6 +718,7 @@ public class MeetingDetailFragment extends Fragment implements StringRequestList
         try {
             UserData userData = Paper.book().read(NetworkUtility.USER_INFO);
             if (appointmentsData != null && userData != null) {
+
                 HashMap<String, String> requestParameter = new HashMap<>();
                 requestParameter.put("username", String.format("%s", userData.getId()));
                 requestParameter.put("meeting_id", String.format("%s", appointmentsData.getId()));

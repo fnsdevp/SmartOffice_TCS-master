@@ -24,21 +24,22 @@ public class OrderFoodFragment extends Fragment {
     List<String> listDataHeader;
     HashMap<String, List<String>> listDataChild ;
 
+
     public OrderFoodFragment(){}
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-         binding = DataBindingUtil.inflate(inflater, R.layout.fragment_order_food, container, false);
-         initView();
-         return binding.getRoot();
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_order_food, container, false);
+        initView();
+        return binding.getRoot();
     }
 
 
     public void initView(){
 
         // preparing list data
-       // prepareListData();
+        prepareListData();
 
         listAdapter = new ExpandableListAdapter(getActivity(), listDataHeader, listDataChild);
 
@@ -54,37 +55,31 @@ public class OrderFoodFragment extends Fragment {
         listDataChild = new HashMap<String, List<String>>();
 
         // Adding child data
-        listDataHeader.add("Top 250");
-        listDataHeader.add("Now Showing");
-        listDataHeader.add("Coming Soon..");
+        listDataHeader.add("Bevarage");
+        listDataHeader.add("Snacks");
+        listDataHeader.add("Others");
 
         // Adding child data
-        List<String> top250 = new ArrayList<String>();
-        top250.add("The Shawshank Redemption");
-        top250.add("The Godfather");
-        top250.add("The Godfather: Part II");
-        top250.add("Pulp Fiction");
-        top250.add("The Good, the Bad and the Ugly");
-        top250.add("The Dark Knight");
-        top250.add("12 Angry Men");
+        List<String> bevarage = new ArrayList<String>();
+        bevarage.add("Coffee");
+        bevarage.add("Green tea");
+        bevarage.add("Milk tea");
+        bevarage.add("Lemon tea");
+        bevarage.add("Masala Tea");
+        bevarage.add("Cold Coffee");
+        bevarage.add("Water");
 
-        List<String> nowShowing = new ArrayList<String>();
-        nowShowing.add("The Conjuring");
-        nowShowing.add("Despicable Me 2");
-        nowShowing.add("Turbo");
-        nowShowing.add("Grown Ups 2");
-        nowShowing.add("Red 2");
-        nowShowing.add("The Wolverine");
+        List<String> snacks = new ArrayList<String>();
+        snacks.add("Chips");
+        snacks.add("Biscuits");
+        snacks.add("Sugar Free Biscuits");
 
-        List<String> comingSoon = new ArrayList<String>();
-        comingSoon.add("2 Guns");
-        comingSoon.add("The Smurfs 2");
-        comingSoon.add("The Spectacular Now");
-        comingSoon.add("The Canyons");
-        comingSoon.add("Europa Report");
+        List<String> others = new ArrayList<String>();
+        others.add("Mineral water");
+        others.add("Luke water");
 
-        listDataChild.put(listDataHeader.get(0), top250); // Header, Child data
-        listDataChild.put(listDataHeader.get(1), nowShowing);
-        listDataChild.put(listDataHeader.get(2), comingSoon);
+        listDataChild.put(listDataHeader.get(0), bevarage); // Header, Child data
+        listDataChild.put(listDataHeader.get(1), snacks);
+        listDataChild.put(listDataHeader.get(2), others);
     }
 }
