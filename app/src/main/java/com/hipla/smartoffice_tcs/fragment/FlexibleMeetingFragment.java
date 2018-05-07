@@ -404,7 +404,7 @@ public class FlexibleMeetingFragment extends BlankFragment implements SelectCont
             Toast.makeText(getActivity(), getResources().getString(R.string.please_select_contact), Toast.LENGTH_SHORT).show();
         } else if (selectedStartTimeSlot == null) {
             Toast.makeText(getActivity(), getResources().getString(R.string.please_select_timeslot), Toast.LENGTH_SHORT).show();
-        } else if (selectedStartDates.isEmpty() || selectedEndDates.isEmpty()) {
+        } else if (selectedStartDates.isEmpty() && selectedEndDates.isEmpty()) {
             Toast.makeText(getActivity(), getResources().getString(R.string.please_select_date), Toast.LENGTH_SHORT).show();
         } else if (binding.etAgenda.getText().toString().isEmpty()) {
             Toast.makeText(getActivity(), getResources().getString(R.string.enter_agenda_for_the_meeting), Toast.LENGTH_SHORT).show();

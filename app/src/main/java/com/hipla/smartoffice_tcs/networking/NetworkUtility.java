@@ -33,6 +33,7 @@ public class NetworkUtility {
     public static final String OPEN_DOOR = "door_status.php";
     public static final String OPEN_DOOR_THIRED_FLOOR = "door_3rd_floor.php";
     public static final String RESCHEDULE_MEETING = "reschedule.php";
+    public static final String REGISTER_GEO_FENCING = "get_distance.php";
     public static final String ADD_BELONGINGS = "add_belongings.php";
     public static final String ADD_RECIPIENTS = "add_recp.php";
     public static final String DELETE_BELONGINGS = "delete_belongings.php";

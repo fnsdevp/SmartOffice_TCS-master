@@ -58,6 +58,7 @@
     <string name="upcoming">Upcoming</string>
     <string name="fixed_meeting">Fixed Meeting</string>
     <string name="flexible_meeting">Flexible Meeting</string>
+    <string name="webex_meeting">WebEx Meeting</string>
     <string name="book_now"><![CDATA[Book now >>]]></string>
     <string name="select_meeting_type">Select a meeting type</string>
     <string name="enter_information">Enter information about meeting</string>
@@ -136,7 +137,10 @@
     <string name="password_hint">Enter New Password</string>
     <string name="about_us_string">Headquartered in Kolkata, Future Netwings has made its place among the best Network Services and Support Organizations of India. With a ISO 9001:2008 certified Quality Management System and a motto to provide Service &amp; Support exceeding global standards, our operations are spread across India and Singapore.
 
+
+
 As a customer centric organization we maintain a huge stock of spares for quick service turnaround. Additionally, when the industry mostly relies on outsourced resources to carry out the services requiring specialized equipments, the availability of such critical resources inhouse has always been an unique advantage with us. No wonder the prestigious clientele we retain with conceit refer us willingly as their favored solutions partner.
+
 
 Our diverse projects include extensive WAN infrastructures, Datacenter Setup, Indoor &amp; Outdoor Secure WiMax &amp; Wi-Fi, Video Conferencing, IP Telephony, Campus LANs, Intra City Fiber Optic Connectivity as well as Advanced Server and Desktop Level OS and Application Configuration. Behind every project our objective has been International Quality and Standards Adherence.</string>
     <string name="light_on">Light on</string>
@@ -158,7 +162,8 @@ Our diverse projects include extensive WAN infrastructures, Datacenter Setup, In
     <string name="you_cant_end_meeting_now">You can\'t end the meeting now.</string>
     <string name="you_cant_start_meeting_now">You can\'t start the meeting now.</string>
     <string name="you_are_running_late">You are getting late for the meeting. Try to reach early.</string>
-    <string name="you_will_reach_400m">Your distance from the meeting location is about 400 Meters.</string>
+    <string name="you_will_reach_400m">Your distance from the meeting location is about %s Meters.</string>
+    <string name="you_will_reach_your_destination_in_mins">You will reach your destination in %s.</string>
     <string name="room1">Conference Room</string>
     <string name="room2">Small Conference Room</string>
     <string name="no_info_available">No Information Available</string>
@@ -183,13 +188,18 @@ Our diverse projects include extensive WAN infrastructures, Datacenter Setup, In
     <string name="send_message">Send Message</string>
     <string name="to_header">To :</string>
     <string name="message_detail">Message Detail</string>
-    <string name="choose_your_category">Choose your category</string>
-    <string name="item_name">Item name</string>
+    <string name="enter_comments">enter your comments</string>
+    <string name="create_meeting">Create Meeting</string>
+    <string name="please_select_appointment_date">Please select meeting date</string>
+    <string name="emails">Email Id :</string>
+    <string name="please_select_email"><![CDATA[<stPlease enter valid email to proceed.]]></string>
+
     <string name="value">Value</string>
     <string name="eg_laptop">eg: laptop</string>
     <string name="eg_WB0002564">eg: WB0002564</string>
     <string name="eg_Dell_inspirion">eg: Dell Inspirion</string>
     <string name="Add_your_belongings_below">Add your belongings below</string>
     <string name="Add_your_recipients_below">Add your recipients below</string>
+    <string name="item_name">Item Name</string>
 
 </resources>

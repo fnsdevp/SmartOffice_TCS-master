@@ -178,6 +178,10 @@ public class FlexibleTimeSlotAdapter extends RecyclerView.Adapter<FlexibleTimeSl
                             }else{
                                 selectedStartPosition = position;
                                 selectedEndPosition = -1;
+
+                                if (mListener != null && selectedStartPosition!=selectedEndPosition) {
+                                    mListener.onTimeSlotClick(timeSlotList.get(selectedStartPosition), null);
+                                }
                             }
 
                             notifyDataSetChanged();
@@ -196,8 +200,29 @@ public class FlexibleTimeSlotAdapter extends RecyclerView.Adapter<FlexibleTimeSl
                                     if (mListener != null) {
 
                                         if (!checkForAvaibility(position, currentDate, startTime)) {
-                                            selectedStartPosition = position;
-                                            mListener.onTimeSlotClick(timeSlotList.get(selectedStartPosition), timeSlotList.get(selectedEndPosition));
+                                            clickCount++;
+
+                                            if(clickCount%2==0) {
+
+                                                selectedEndPosition = position;
+
+                                                if (selectedStartPosition > selectedEndPosition) {
+                                                    int j = selectedEndPosition;
+                                                    selectedEndPosition = selectedStartPosition;
+                                                    selectedStartPosition = j;
+                                                }
+
+                                                mListener.onTimeSlotClick(timeSlotList.get(selectedStartPosition), timeSlotList.get(selectedEndPosition));
+
+                                            }else{
+                                                selectedStartPosition = position;
+                                                selectedEndPosition = -1;
+
+                                                if (mListener != null && selectedStartPosition!=selectedEndPosition) {
+                                                    mListener.onTimeSlotClick(timeSlotList.get(selectedStartPosition), null);
+                                                }
+                                            }
+
                                             notifyDataSetChanged();
                                         }
 

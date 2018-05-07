@@ -7,7 +7,6 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListView;
 
 import com.hipla.smartoffice_tcs.R;
 import com.hipla.smartoffice_tcs.adapter.ExpandableListAdapter;

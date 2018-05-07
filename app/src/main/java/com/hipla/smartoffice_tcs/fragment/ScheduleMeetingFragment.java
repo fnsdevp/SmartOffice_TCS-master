@@ -24,6 +24,7 @@ public class ScheduleMeetingFragment extends BlankFragment {
     private FragmentScheduleMeetingBinding binding;
     private FixedMeetingFragment fixedMeetingFragment;
     private FlexibleMeetingFragment flexibleMeetingFragment;
+    private WebExMeetingFragment webexMeetingFragment;
     private MyPagerAdapter myPagerAdapter;
 
     public ScheduleMeetingFragment() {
@@ -47,6 +48,8 @@ public class ScheduleMeetingFragment extends BlankFragment {
 
         flexibleMeetingFragment = new FlexibleMeetingFragment();
 
+        webexMeetingFragment = new WebExMeetingFragment();
+
         myPagerAdapter = new MyPagerAdapter(getChildFragmentManager());
         binding.vpMeetings.setAdapter(myPagerAdapter);
 
@@ -58,18 +61,33 @@ public class ScheduleMeetingFragment extends BlankFragment {
 
             @Override
             public void onPageSelected(int position) {
-                if(position==0){
+                if (position == 0) {
                     binding.line1.setVisibility(View.VISIBLE);
                     binding.tvFixedMeetings.setTextColor(getResources().getColor(R.color.text_blue));
 
                     binding.line2.setVisibility(View.GONE);
                     binding.tvFlexibleMeetings.setTextColor(getResources().getColor(R.color.text_light_gray));
-                }else if(position==1){
+
+                    binding.line3.setVisibility(View.GONE);
+                    binding.tvWebexMeetings.setTextColor(getResources().getColor(R.color.text_light_gray));
+                } else if (position == 1) {
                     binding.line1.setVisibility(View.GONE);
                     binding.tvFixedMeetings.setTextColor(getResources().getColor(R.color.text_light_gray));
 
                     binding.line2.setVisibility(View.VISIBLE);
                     binding.tvFlexibleMeetings.setTextColor(getResources().getColor(R.color.text_blue));
+
+                    binding.line3.setVisibility(View.GONE);
+                    binding.tvWebexMeetings.setTextColor(getResources().getColor(R.color.text_light_gray));
+                } else if (position == 2) {
+                    binding.line1.setVisibility(View.GONE);
+                    binding.tvFixedMeetings.setTextColor(getResources().getColor(R.color.text_light_gray));
+
+                    binding.line2.setVisibility(View.GONE);
+                    binding.tvFlexibleMeetings.setTextColor(getResources().getColor(R.color.text_light_gray));
+
+                    binding.line3.setVisibility(View.VISIBLE);
+                    binding.tvWebexMeetings.setTextColor(getResources().getColor(R.color.text_blue));
                 }
             }
 
@@ -81,12 +99,16 @@ public class ScheduleMeetingFragment extends BlankFragment {
 
     }
 
-    public void setFixedMeeting(){
+    public void setFixedMeeting() {
         binding.vpMeetings.setCurrentItem(0);
     }
 
-    public void setFlexibleMeeting(){
+    public void setFlexibleMeeting() {
         binding.vpMeetings.setCurrentItem(1);
+    }
+
+    public void setWebexMeeting() {
+        binding.vpMeetings.setCurrentItem(2);
     }
 
     private class MyPagerAdapter extends FragmentPagerAdapter {
@@ -102,6 +124,8 @@ public class ScheduleMeetingFragment extends BlankFragment {
                     return fixedMeetingFragment;
                 case 1:
                     return flexibleMeetingFragment;
+                case 2:
+                    return webexMeetingFragment;
                 default:
                     return fixedMeetingFragment;
             }
@@ -109,7 +133,7 @@ public class ScheduleMeetingFragment extends BlankFragment {
 
         @Override
         public int getCount() {
-            return 2;
+            return 3;
         }
     }
 

@@ -142,6 +142,10 @@ public class ScheduleETADetectionService extends JobService implements GoogleApi
                     JSONObject elementOnject = elements.getJSONObject(0).getJSONObject("duration");
 
                     int timeTOReachInSeconds = elementOnject.getInt("value");
+                    String timeTOReachInMins = elementOnject.optString("text");
+
+                    String distanceInKm = elementOnject.optString("text");
+
                     if (timeTOReachInSeconds < CONST.TIME_BEFORE_DETECTION_HRS * 60 * 60) {
                         UpcomingMeetings meetingDetail = Paper.book().read(CONST.CURRENT_MEETING_DATA);
                         if (meetingDetail != null) {
@@ -160,7 +164,60 @@ public class ScheduleETADetectionService extends JobService implements GoogleApi
                                 return;
                             }
 
-                            if (timeInSec <= (timeTOReachInSeconds + CONST.EXTRA_TIME_BEFORE_DETECTION_MINS * 60)) {
+                            if(timeTOReachInSeconds<=timeInSec){
+
+                                if(timeTOReachInSeconds<=(timeInSec-((CONST.EXTRA_TIME_BEFORE_DETECTION_MINS+5)*60))){
+                                    //reschedule ETA
+
+                                    CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
+                                            String.format(getString(R.string.you_will_reach_your_destination_in_mins), "" + timeTOReachInMins), "Info");
+
+
+                                    CONST.scheduleMeetingETAJob(getApplicationContext(),
+                                            (timeInSec - (timeTOReachInSeconds + CONST.EXTRA_TIME_BEFORE_DETECTION_MINS * 60)) * 1000,
+                                            CONST.SCHEDULE_ETA_DETECTION_JOB_ID);
+                                }else{
+                                    //start geofencing detec tion
+                                    CONST.scheduleStartMeetingJob(getApplicationContext(), 1000,
+                                            CONST.SCHEDULE_START_MEETING_JOB_ID);
+
+                                    if(timeTOReachInSeconds<=timeInSec-(timeInSec-(CONST.EXTRA_TIME_BEFORE_DETECTION_MINS)*60)){
+                                        // show you should start your metting is at .....
+                                        CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
+                                                getString(R.string.you_will_be_late), "Info");
+                                    } else if(timeTOReachInSeconds<=timeInSec-((CONST.EXTRA_TIME_BEFORE_DETECTION_MINS-5)*60)){
+                                        // show you are late should start your metting is at .....
+                                        CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
+                                                getString(R.string.you_are_running_late), "Info");
+                                    }else{
+                                        // please start to continune
+
+                                        CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
+                                                String.format(getString(R.string.you_will_reach_your_destination_in_mins), "" + timeTOReachInMins), "Info");
+
+                                    }
+
+                                }
+
+                            }else{
+                                //reschedule
+                               // strat timer now
+
+                                CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
+                                        getString(R.string.you_will_late_and_reschedule), "Info");
+
+                                CONST.scheduleStartMeetingJob(getApplicationContext(), 1000,
+                                        CONST.SCHEDULE_START_MEETING_JOB_ID);
+
+                            }
+
+
+                            /*//need to change logic at this place
+                            if (timeInSec >= (timeTOReachInSeconds)) {
+
+                                CONST.scheduleStartMeetingJob(getApplicationContext(), 1000,
+                                        CONST.SCHEDULE_START_MEETING_JOB_ID);
+                            } if ((timeInSec+ CONST.EXTRA_TIME_BEFORE_DETECTION_MINS * 60) <= (timeTOReachInSeconds)) {
                                 CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
                                         getString(R.string.you_are_running_late), "Info");
 
@@ -170,12 +227,12 @@ public class ScheduleETADetectionService extends JobService implements GoogleApi
                                 CONST.scheduleStartMeetingJob(getApplicationContext(),
                                         (timeInSec - (timeTOReachInSeconds + CONST.EXTRA_TIME_BEFORE_DETECTION_MINS * 60)) * 1000,
                                         CONST.SCHEDULE_START_MEETING_JOB_ID);
-                            }
+                            }*/
 
                         }
                     } else {
                         CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
-                                getString(R.string.you_are_running_late), "Info");
+                                getString(R.string.you_will_late_and_reschedule), "Info");
 
                         CONST.scheduleStartMeetingJob(getApplicationContext(), 1000, CONST.SCHEDULE_START_MEETING_JOB_ID);
                     }

@@ -96,4 +96,9 @@ public class AddBelongingsAdapter extends RecyclerView.Adapter<AddBelongingsAdap
         manageRowCallback.onRowRemove(position);
 
     }
+
+    public void notifyDataChange(List<AddBelongingsModel> belongingsList){
+        this.belongingsList = belongingsList;
+        notifyDataSetChanged();
+    }
 }

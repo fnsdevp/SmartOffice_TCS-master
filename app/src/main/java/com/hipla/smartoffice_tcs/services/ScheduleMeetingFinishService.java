@@ -6,6 +6,7 @@ import android.app.job.JobService;
 import android.content.Context;
 import android.content.Intent;
 
+import com.hipla.smartoffice_tcs.activity.DashboardActivity;
 import com.hipla.smartoffice_tcs.database.Db_Helper;
 import com.hipla.smartoffice_tcs.model.UpcomingMeetings;
 import com.hipla.smartoffice_tcs.utils.CONST;
@@ -42,7 +43,8 @@ public class ScheduleMeetingFinishService extends JobService {
                     if (isMyServiceRunning(getApplicationContext(), MyNavigationService.class))
                         stopService(new Intent(getApplicationContext(), MyNavigationService.class));
 
-                    checkForUpcomingMeeting();
+                    //checkForUpcomingMeeting();
+                    CONST.scheduleMeetingFetchJob(ScheduleMeetingFinishService.this, 1300, CONST.FETCH_JOB_ID);
                 }
             }
         } catch (Exception ex) {
@@ -86,7 +88,7 @@ public class ScheduleMeetingFinishService extends JobService {
                     if(currentDateTime.compareTo(meetingDateTimeEnd) < 0){
                         Calendar cal = Calendar.getInstance();
                         cal.setTime(meetingDateTime);
-                        cal.set(Calendar.HOUR, CONST.TIME_BEFORE_DETECTION);
+                        cal.add(Calendar.HOUR, CONST.TIME_BEFORE_DETECTION);
 
                         CONST.scheduleMeetingETAJob(getApplicationContext(), cal.getTimeInMillis() - System.currentTimeMillis(), CONST.SCHEDULE_ETA_DETECTION_JOB_ID);
                         Paper.book().write(CONST.CURRENT_MEETING_DATA, upcomingMeetingsList.get(i));
@@ -97,7 +99,7 @@ public class ScheduleMeetingFinishService extends JobService {
                 } else {
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(meetingDateTime);
-                    cal.set(Calendar.HOUR, CONST.TIME_BEFORE_DETECTION);
+                    cal.add(Calendar.HOUR, CONST.TIME_BEFORE_DETECTION);
 
                     CONST.scheduleMeetingETAJob(getApplicationContext(), cal.getTimeInMillis() - System.currentTimeMillis(), CONST.SCHEDULE_ETA_DETECTION_JOB_ID);
                     Paper.book().write(CONST.CURRENT_MEETING_DATA, upcomingMeetingsList.get(i));

@@ -117,7 +117,7 @@ public class LoginActivity extends BaseActivity implements StringRequestListener
         pDialog.setMessage("Please wait...");
         pDialog.setCancelable(false);
 
-        if (!pDialog.isShowing())
+        if (pDialog!=null && !pDialog.isShowing())
             pDialog.show();
 
         if (binding.checkbox.isChecked()) {
@@ -141,7 +141,7 @@ public class LoginActivity extends BaseActivity implements StringRequestListener
     @Override
     public void onSuccess(String result, String type) throws JSONException {
 
-        if (pDialog.isShowing()) {
+        if (pDialog!=null && pDialog.isShowing()) {
             pDialog.dismiss();
         }
 
@@ -178,7 +178,7 @@ public class LoginActivity extends BaseActivity implements StringRequestListener
 
     @Override
     public void onFailure(int responseCode, String responseMessage) {
-        if (pDialog.isShowing()) {
+        if (pDialog!=null && pDialog.isShowing()) {
             pDialog.dismiss();
         }
     }
@@ -238,7 +238,7 @@ public class LoginActivity extends BaseActivity implements StringRequestListener
 
         @Override
         protected void onPostExecute(Boolean result) {
-            if (pDialog.isShowing()) {
+            if (pDialog!=null && pDialog.isShowing()) {
                 pDialog.dismiss();
             }
             if (result.booleanValue()) {
@@ -253,7 +253,7 @@ public class LoginActivity extends BaseActivity implements StringRequestListener
         protected void onPreExecute() {
             super.onPreExecute();
 
-            if (!pDialog.isShowing()) {
+            if (pDialog!=null && !pDialog.isShowing()) {
                 pDialog.show();
             }
         }

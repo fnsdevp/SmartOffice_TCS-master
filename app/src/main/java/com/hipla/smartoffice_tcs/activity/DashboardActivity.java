@@ -351,6 +351,7 @@ public class DashboardActivity extends BaseActivity implements StringRequestList
             case "setMeetingStatus":
                 JSONObject response = new JSONObject(result);
 
+
                 break;
         }
     }
@@ -436,7 +437,7 @@ public class DashboardActivity extends BaseActivity implements StringRequestList
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            Toast.makeText(context, "Action: " + intent.getAction(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Action: " + intent.getAction(), Toast.LENGTH_SHORT).show();
 
             if(intent.getAction().equalsIgnoreCase("intent.start.Navigation")) {
                 if (!isMyServiceRunning(DashboardActivity.this, MyNavigationService.class))

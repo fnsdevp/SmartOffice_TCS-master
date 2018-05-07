@@ -20,8 +20,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Toast;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hipla.smartoffice_tcs.R;
 import com.hipla.smartoffice_tcs.activity.DashboardActivity;
 import com.hipla.smartoffice_tcs.adapter.AddBelongingsAdapter;
 import com.hipla.smartoffice_tcs.adapter.AddRecipientAdapter;
@@ -42,8 +44,10 @@ import com.hipla.smartoffice_tcs.networking.PostStringRequest;
 import com.hipla.smartoffice_tcs.networking.StringRequestListener;
 import com.hipla.smartoffice_tcs.utils.CONST;
 import com.hipla.smartoffice_tcs.utils.MarshmallowPermissionHelper;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -57,7 +61,7 @@ import io.paperdb.Paper;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class MeetingDetailFragment extends Fragment implements StringRequestListener, RescheduleFixedMeetingDialog.OnDialogEvent, RescheduleFlexibleMeetingDialog.OnDialogEvent,         AddBelongingsAdapter.ManageRowCallback, AddRecipientAdapter.ManageRecipientCallback {
+public class MeetingDetailFragment extends Fragment implements StringRequestListener, RescheduleFixedMeetingDialog.OnDialogEvent, RescheduleFlexibleMeetingDialog.OnDialogEvent, AddBelongingsAdapter.ManageRowCallback, AddRecipientAdapter.ManageRecipientCallback {
 
     private static final int REQUEST_CALL_PERMISSION = 100;
     private FragmentMeetingDetailBinding binding;
@@ -65,11 +69,11 @@ public class MeetingDetailFragment extends Fragment implements StringRequestList
     private Appointments appointmentsData;
     private ReviewListAdapter mAdapter;
     private SimpleDateFormat mDateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm a");
-    private List<AddBelongingsModel> addBelongingsModelsList ;
-    private List<AddRecipientsModel> addRecipientsModelsList ;
+    private List<AddBelongingsModel> addBelongingsModelsList;
+    private List<AddRecipientsModel> addRecipientsModelsList;
     private AddBelongingsAdapter addBelongingsAdapter;
     private AddRecipientAdapter addRecipientAdapter;
-    private boolean visibleAddBelongings = false , visibleAddRecipients = false;
+    private boolean visibleAddBelongings = false, visibleAddRecipients = false;
 
     public MeetingDetailFragment() {
         // Required empty public constructor
@@ -115,12 +119,12 @@ public class MeetingDetailFragment extends Fragment implements StringRequestList
                 @Override
                 public void onClick(View v) {
 
-                    if(appointmentsData.getAppointmentType().equalsIgnoreCase("flexible")){
+                    if (appointmentsData.getAppointmentType().equalsIgnoreCase("flexible")) {
 
                         RescheduleFlexibleMeetingDialog mDialog = new RescheduleFlexibleMeetingDialog();
                         mDialog.setOnDismissClickListener(MeetingDetailFragment.this);
                         mDialog.show(getChildFragmentManager(), "dialog");
-                    }else{
+                    } else {
 
                         RescheduleFixedMeetingDialog mDialog = new RescheduleFixedMeetingDialog();
                         mDialog.setOnDismissClickListener(MeetingDetailFragment.this);
@@ -136,19 +140,25 @@ public class MeetingDetailFragment extends Fragment implements StringRequestList
         addBelongingsModelsList = new ArrayList<>();
         addRecipientsModelsList = new ArrayList<>();
 
-        addBelongingsAdapter = new AddBelongingsAdapter(this,addBelongingsModelsList);
-        addRecipientAdapter = new AddRecipientAdapter(this,addRecipientsModelsList);
+        addBelongingsAdapter = new AddBelongingsAdapter(this, addBelongingsModelsList);
+        addRecipientAdapter = new AddRecipientAdapter(this, addRecipientsModelsList);
 
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        binding.addBelongingsRecyclerView.setLayoutManager(layoutManager);
+        binding.addBelongingsRecyclerView.setAdapter(addBelongingsAdapter);
+
+        RecyclerView.LayoutManager layoutManager1 = new LinearLayoutManager(getContext());
+        binding.addRecipientsRecyclerView.setLayoutManager(layoutManager1);
+        binding.addRecipientsRecyclerView.setAdapter(addRecipientAdapter);
 
         binding.tvAddBelongings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                binding.llAddBelongings.setVisibility(View.VISIBLE);
+                binding.llAddRecepients.setVisibility(View.GONE);
+                binding.llMeetingsReviews.setVisibility(View.GONE);
 
-                RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
-                binding.addBelongingsRecyclerView.setLayoutManager(layoutManager);
-                binding.addBelongingsRecyclerView.setItemAnimator(new DefaultItemAnimator());
-                binding.addBelongingsRecyclerView.setAdapter(addBelongingsAdapter);
                 prepareDataBelongings();
             }
         });
@@ -157,10 +167,26 @@ public class MeetingDetailFragment extends Fragment implements StringRequestList
             @Override
             public void onClick(View view) {
 
+                binding.llAddBelongings.setVisibility(View.GONE);
+                binding.llAddRecepients.setVisibility(View.VISIBLE);
+                binding.llMeetingsReviews.setVisibility(View.GONE);
+
+                prepareDataRecipients();
+            }
+        });
+
+        binding.ivNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                binding.llAddBelongings.setVisibility(View.GONE);
+                binding.llAddRecepients.setVisibility(View.GONE);
+                binding.llMeetingsReviews.setVisibility(View.VISIBLE);
             }
         });
 
         getAllReview(appointmentsData);
+
     }
 
     public void setAppointmentData(final Appointments appointments) {
@@ -230,7 +256,7 @@ public class MeetingDetailFragment extends Fragment implements StringRequestList
 
                             if (meetingDateTime.compareTo(new Date()) > 0) {
                                 setMeetingStatus(appointments, "end");
-                            }else{
+                            } else {
                                 Toast.makeText(getActivity(), getResources().getString(R.string.meeting_cant_be_finished), Toast.LENGTH_SHORT).show();
                             }
 
@@ -250,13 +276,13 @@ public class MeetingDetailFragment extends Fragment implements StringRequestList
                         calendar.setTime(meetinDate);
                         calendar.set(Calendar.MINUTE, CONST.TIME_BEFORE_CANCEL_MEETING_IN_MIN);
 
-                        if(new Date().compareTo(calendar.getTime())<0) {
+                        if (new Date().compareTo(calendar.getTime()) < 0) {
                             setMeetingStatus(appointments, "cancel");
-                        }else{
+                        } else {
                             Toast.makeText(getActivity(), getString(R.string.you_cant_cancel_meeting_now), Toast.LENGTH_SHORT).show();
                         }
 
-                    }catch (Exception ex){
+                    } catch (Exception ex) {
                         ex.printStackTrace();
                     }
                 }
@@ -438,12 +464,12 @@ public class MeetingDetailFragment extends Fragment implements StringRequestList
                                 , ReviewMessage[].class);
                         List<ReviewMessage> mData = Arrays.asList(reviewMessages);
 
-                        if(mData.size()>0){
+                        if (mData.size() > 0) {
                             View footerView = ((LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(R.layout.outbox_footer, null, false);
                             binding.listComments.addFooterView(footerView);
                         }
 
-                        if(mAdapter!=null){
+                        if (mAdapter != null) {
                             mAdapter.notifyAdpater(mData);
                         }
 
@@ -458,19 +484,19 @@ public class MeetingDetailFragment extends Fragment implements StringRequestList
 
                     JSONObject addedBelongings = new JSONObject(result);
 
-                    Log.d("jos", "onSuccess: "+addedBelongings.toString());
+                    Log.d("jos", "onSuccess: " + addedBelongings.toString());
 
                     break;
 
                 case "removeBelongings":
                     JSONObject removeBelongings = new JSONObject(result);
-                    Log.d("jos", "onSuccess: "+removeBelongings.toString());
+                    Log.d("jos", "onSuccess: " + removeBelongings.toString());
 
                     break;
 
                 case "addRecipients":
                     JSONObject addedRecipient = new JSONObject(result);
-                    Log.d("jos", "onSuccess: "+addedRecipient.toString());
+                    Log.d("jos", "onSuccess: " + addedRecipient.toString());
 
             }
 
@@ -584,13 +610,13 @@ public class MeetingDetailFragment extends Fragment implements StringRequestList
             setAppointmentData(appointmentsData);
         }
 
-        if(getActivity()!=null){
+        if (getActivity() != null) {
             ((DashboardActivity) getActivity()).backFromFragment();
         }
 
     }
 
-    private void openIndoorMap(){
+    private void openIndoorMap() {
         Db_Helper db_helper = new Db_Helper(getActivity());
         ZoneInfo zoneInfo = db_helper.getZoneInfoByName(String.format("%s", appointmentsData.getLocation()));
         if (zoneInfo != null) {
@@ -614,49 +640,34 @@ public class MeetingDetailFragment extends Fragment implements StringRequestList
     }
 
 
-
-    public void prepareDataBelongings(){
+    public void prepareDataBelongings() {
         Log.d("jos", "onRowAdd: ");
 
-        if(!visibleAddBelongings){
-            if(addBelongingsModelsList.size()<1)
-            {
-                AddBelongingsModel model = new AddBelongingsModel("","" +
-                        "");
-                addBelongingsModelsList.add(model);
+        if (addBelongingsModelsList.size() < 1) {
+            AddBelongingsModel model = new AddBelongingsModel("", "" +
+                    "");
+            addBelongingsModelsList.add(model);
 
-                addBelongingsAdapter.notifyDataSetChanged();
+            addBelongingsAdapter.notifyDataChange(addBelongingsModelsList);
 
-            }else{
+        } else {
 
-            }
-            binding.llAddBelongings.setVisibility(View.VISIBLE);
-            visibleAddBelongings = true ;
-        }else {
-            binding.llAddBelongings.setVisibility(View.GONE);
-            visibleAddBelongings = false;
         }
 
-    }public void prepareDataRecipients(){
+    }
+
+    public void prepareDataRecipients() {
         Log.d("jos", "onRowAdd: ");
 
-        if(!visibleAddRecipients){
-            if(addRecipientsModelsList.size()<1)
-            {
-                AddRecipientsModel model = new AddRecipientsModel("","" +
-                        "");
-                addRecipientsModelsList.add(model);
+        if (addRecipientsModelsList.size() < 1) {
+            AddRecipientsModel model = new AddRecipientsModel("", "" +
+                    "");
+            addRecipientsModelsList.add(model);
 
-                addRecipientAdapter.notifyDataSetChanged();
+            addRecipientAdapter.notifyDataChange(addRecipientsModelsList);
 
-            }else{
+        } else {
 
-            }
-            binding.llAddRecepients.setVisibility(View.VISIBLE);
-            visibleAddRecipients = true ;
-        }else {
-            binding.llAddRecepients.setVisibility(View.GONE);
-            visibleAddRecipients = false;
         }
 
     }
@@ -666,7 +677,7 @@ public class MeetingDetailFragment extends Fragment implements StringRequestList
     public void onRowAdd() {
 
         Log.d("jos", "onRowAdd: ");
-        AddBelongingsModel model = new AddBelongingsModel("","" +
+        AddBelongingsModel model = new AddBelongingsModel("", "" +
                 "");
         addBelongingsModelsList.add(model);
 
@@ -678,21 +689,21 @@ public class MeetingDetailFragment extends Fragment implements StringRequestList
     public void onRowRemove(int position) {
 
         Log.d("jos", "onRowRemove: ");
-        addBelongingsModelsList.remove(position-1);
+        addBelongingsModelsList.remove(position - 1);
         addBelongingsAdapter.notifyDataSetChanged();
         removeBelongings(position);
 
     }
 
 
-    public void addBelongings(){
+    public void addBelongings() {
         try {
 
             if (appointmentsData != null) {
                 HashMap<String, String> requestParameter = new HashMap<>();
                 requestParameter.put("meeting_id", String.format("%s", appointmentsData.getId()));
-                requestParameter.put("property_type", String.format("%s", addBelongingsModelsList.get(addBelongingsModelsList.size()-1).getName()));
-                requestParameter.put("property_value", String.format("%s",addBelongingsModelsList.get(addBelongingsModelsList.size()-1).getValue()));
+                requestParameter.put("property_type", String.format("%s", addBelongingsModelsList.get(addBelongingsModelsList.size() - 1).getName()));
+                requestParameter.put("property_value", String.format("%s", addBelongingsModelsList.get(addBelongingsModelsList.size() - 1).getValue()));
                 requestParameter.put("device_id", String.format("%s", Paper.book().read(NetworkUtility.TOKEN)));
 
                 new PostStringRequest(getActivity(), requestParameter,
@@ -705,9 +716,9 @@ public class MeetingDetailFragment extends Fragment implements StringRequestList
         }
     }
 
-    public void removeBelongings(int rowId){
+    public void removeBelongings(int rowId) {
         HashMap<String, String> requestParameter = new HashMap<>();
-        requestParameter.put("row_id", String.format("%s",rowId));
+        requestParameter.put("row_id", String.format("%s", rowId));
 
         new PostStringRequest(getActivity(), requestParameter, MeetingDetailFragment.this, "removeBelongings",
                 NetworkUtility.BASEURL + NetworkUtility.DELETE_BELONGINGS);
@@ -722,8 +733,8 @@ public class MeetingDetailFragment extends Fragment implements StringRequestList
                 HashMap<String, String> requestParameter = new HashMap<>();
                 requestParameter.put("username", String.format("%s", userData.getId()));
                 requestParameter.put("meeting_id", String.format("%s", appointmentsData.getId()));
-                requestParameter.put("creator_id ", String.format("%s",userData.getId()));
-                requestParameter.put("fname", String.format("%s",userData.getFname()));
+                requestParameter.put("creator_id ", String.format("%s", userData.getId()));
+                requestParameter.put("fname", String.format("%s", userData.getFname()));
                 requestParameter.put("lname", String.format("%s", userData.getLname()));
 
                 new PostStringRequest(getActivity(), requestParameter, MeetingDetailFragment.this, "addRecipients",

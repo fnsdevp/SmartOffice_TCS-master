@@ -119,6 +119,7 @@ public class FetchMeetingInfoservice extends JobService implements StringRequest
                                     checkForUpcomingMeeting();
                                 }
 
+                                checkIfAnyPriorMeeting();
                             }
                         }
 
@@ -151,6 +152,67 @@ public class FetchMeetingInfoservice extends JobService implements StringRequest
 
     }
 
+    private void checkIfAnyPriorMeeting() {
+        try{
+            Date currentDateTime = new Date();
+
+            Db_Helper db_helper = new Db_Helper(getApplicationContext());
+            List<UpcomingMeetings> upcomingMeetingsList = db_helper.getUpcomingMeetings(new SimpleDateFormat("yyyy-MM-dd").format(new Date()));
+
+            UpcomingMeetings meetingDetail = Paper.book().read(CONST.CURRENT_MEETING_DATA);
+            int position= -1;
+
+            for (int i = 0; i < upcomingMeetingsList.size(); i++) {
+                UpcomingMeetings newMeeting = upcomingMeetingsList.get(i);
+
+                if(newMeeting.getId()!=meetingDetail.getId()){
+
+                    Date newMeetingDateTime = dateFormat.parse(newMeeting.getFdate()
+                            + " " + newMeeting.getFromtime());
+
+                    Date currentMeetingDateTime = dateFormat.parse(meetingDetail.getFdate()
+                            + " " + meetingDetail.getFromtime());
+
+                    if(newMeetingDateTime.compareTo(currentMeetingDateTime)<0){
+                        position = i;
+                    }
+                }
+            }
+
+            if(position!=-1){
+
+                Date newMeetingDateTime = dateFormat.parse(upcomingMeetingsList.get(position).getFdate()
+                        + " " + upcomingMeetingsList.get(position).getFromtime());
+
+                Calendar cal = Calendar.getInstance();
+                cal.setTime(newMeetingDateTime);
+                cal.add(Calendar.HOUR, CONST.TIME_BEFORE_DETECTION);
+
+                if((cal.getTimeInMillis() - System.currentTimeMillis())>=0) {
+                    CONST.scheduleMeetingETAJob(getApplicationContext(), cal.getTimeInMillis() - System.currentTimeMillis(),
+                            CONST.SCHEDULE_ETA_DETECTION_JOB_ID);
+                }else{
+                    CONST.scheduleMeetingETAJob(getApplicationContext(), 1000,
+                            CONST.SCHEDULE_ETA_DETECTION_JOB_ID);
+                }
+                Paper.book().write(CONST.CURRENT_MEETING_DATA, upcomingMeetingsList.get(position));
+
+            }else{
+
+                Date currentMeetingDateTime = dateFormat.parse(meetingDetail.getFdate()
+                        + " " + meetingDetail.getTotime());
+
+                if(new Date().compareTo(currentMeetingDateTime)>0){
+                    stopCurrentMeeting();
+                    CONST.scheduleMeetingETAJob(getApplicationContext(), 1000, CONST.SCHEDULE_ETA_DETECTION_JOB_ID);
+                }
+            }
+
+        }catch (Exception ex){
+            ex.printStackTrace();
+        }
+    }
+
     private void checkForUpcomingMeeting() {
         try {
             Date currentDateTime = new Date();
@@ -171,7 +233,7 @@ public class FetchMeetingInfoservice extends JobService implements StringRequest
                     if(currentDateTime.compareTo(meetingDateTimeEnd) < 0){
                         Calendar cal = Calendar.getInstance();
                         cal.setTime(meetingDateTime);
-                        cal.set(Calendar.HOUR, CONST.TIME_BEFORE_DETECTION);
+                        cal.add(Calendar.HOUR, CONST.TIME_BEFORE_DETECTION);
 
                         CONST.scheduleMeetingETAJob(getApplicationContext(), cal.getTimeInMillis() - System.currentTimeMillis(), CONST.SCHEDULE_ETA_DETECTION_JOB_ID);
                         Paper.book().write(CONST.CURRENT_MEETING_DATA, upcomingMeetingsList.get(i));
@@ -182,9 +244,15 @@ public class FetchMeetingInfoservice extends JobService implements StringRequest
                 } else {
                     Calendar cal = Calendar.getInstance();
                     cal.setTime(meetingDateTime);
-                    cal.set(Calendar.HOUR, CONST.TIME_BEFORE_DETECTION);
+                    cal.add(Calendar.HOUR, CONST.TIME_BEFORE_DETECTION);
 
-                    CONST.scheduleMeetingETAJob(getApplicationContext(), cal.getTimeInMillis() - System.currentTimeMillis(), CONST.SCHEDULE_ETA_DETECTION_JOB_ID);
+                    if((cal.getTimeInMillis() - System.currentTimeMillis())>=0) {
+                        CONST.scheduleMeetingETAJob(getApplicationContext(), cal.getTimeInMillis() - System.currentTimeMillis(),
+                                CONST.SCHEDULE_ETA_DETECTION_JOB_ID);
+                    }else{
+                        CONST.scheduleMeetingETAJob(getApplicationContext(), 1000,
+                                CONST.SCHEDULE_ETA_DETECTION_JOB_ID);
+                    }
                     Paper.book().write(CONST.CURRENT_MEETING_DATA, upcomingMeetingsList.get(i));
 
                     break;

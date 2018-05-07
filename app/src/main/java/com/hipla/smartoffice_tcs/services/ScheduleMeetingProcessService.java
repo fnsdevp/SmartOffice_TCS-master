@@ -59,7 +59,7 @@ public class ScheduleMeetingProcessService extends JobService implements GoogleA
     private UpcomingMeetings meetingDetail;
     private float DISPLACEMENT = 1;
     private boolean isJobFinished = false;
-    private boolean is200MNotificationShown = false,is400MNotificationShown = false, isWelcomeNotificationShown = false, isLateNotificationShown = false;
+    private boolean is200MNotificationShown = false, is400MNotificationShown = false, isWelcomeNotificationShown = false, isLateNotificationShown = false;
     private TimerTask mTimerTask = null;
     private Timer mTimer = new Timer();
     private int notificationCount = 0;
@@ -75,11 +75,35 @@ public class ScheduleMeetingProcessService extends JobService implements GoogleA
             mTimerTask = new TimerTask() {
                 @Override
                 public void run() {
-                    if (!isLoadingData)
-                        getETA(latitude, longitude);
+                    try {
+                        if (!isLoadingData) {
+                            Date meetingDateTime = dateFormat.parse(meetingDetail.getFdate()
+                                    + " " + meetingDetail.getFromtime());
+
+                            Date meetingDateTimeEnd = dateFormat.parse(meetingDetail.getFdate()
+                                    + " " + meetingDetail.getTotime());
+
+                            if (new Date().compareTo(meetingDateTime) <= 0) {
+                                getETA(latitude, longitude);
+                            }
+
+                            if (new Date().compareTo(meetingDateTimeEnd) > 0) {
+                                stopLocationUpdates();
+
+                                mTimer.cancel();
+                                mTimerTask.cancel();
+
+                                CONST.scheduleEndMeetingJob(ScheduleMeetingProcessService.this, 1300, CONST.SCHEDULE_END_MEETING_JOB_ID);
+
+                                jobFinished(parameters, false);
+                            }
+                        }
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
                 }
             };
-            mTimer.schedule(mTimerTask, 1*60*1000, 5*60*1000);
+            mTimer.schedule(mTimerTask, 1 * 60 * 1000, 5 * 60 * 1000);
 
             initializeLocationManager();
 
@@ -94,7 +118,8 @@ public class ScheduleMeetingProcessService extends JobService implements GoogleA
 
         stopLocationUpdates();
 
-        //checkForUpcomingMeeting();
+        mTimer.cancel();
+        mTimerTask.cancel();
 
         return false;
     }
@@ -125,6 +150,25 @@ public class ScheduleMeetingProcessService extends JobService implements GoogleA
             isLoadingData = true;
         }
 
+    }
+
+    private void setGeoFencing(String latitude, String longitude) {
+        try {
+            UserData userData = Paper.book().read(NetworkUtility.USER_INFO);
+
+            if (userData != null) {
+                HashMap<String, String> requestParameter = new HashMap<>();
+                requestParameter.put("userid", "" + userData.getId());
+                requestParameter.put("lat", "" + latitude);
+                requestParameter.put("lng", "" + longitude);
+
+                new PostStringRequest(getApplicationContext(), requestParameter, ScheduleMeetingProcessService.this, "registerGeoFencing",
+                        NetworkUtility.BASEURL + NetworkUtility.REGISTER_GEO_FENCING);
+            }
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
 
     private void initializeLocationManager() {
@@ -162,11 +206,15 @@ public class ScheduleMeetingProcessService extends JobService implements GoogleA
                     int timeInSec = 0;
 
                     JSONObject elementOnject = elements.getJSONObject(0).getJSONObject("duration");
+                    JSONObject distanceObj = elements.getJSONObject(0).getJSONObject("duration");
 
                     int timeTOReachInSeconds = elementOnject.getInt("value");
+                    String timeTOReachInMins = elementOnject.getString("text");
+
+                    String distanceInKm = elementOnject.getString("text");
 
                     UpcomingMeetings meetingDetail = Paper.book().read(CONST.CURRENT_MEETING_DATA);
-                    if(meetingDetail!=null) {
+                    if (meetingDetail != null) {
                         Date meetingDateTime = dateFormat.parse(meetingDetail.getFdate()
                                 + " " + meetingDetail.getFromtime());
 
@@ -181,28 +229,41 @@ public class ScheduleMeetingProcessService extends JobService implements GoogleA
 
                     }
 
-                    if (timeTOReachInSeconds < timeInSec) {
+                    UserData userData = Paper.book().read(NetworkUtility.USER_INFO);
+
+                    if (timeTOReachInSeconds < timeInSec && userData != null && userData.getUsertype().equalsIgnoreCase("Guest")) {
                         isAbleToReach = true;
+
+                        CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
+                                String.format(getString(R.string.you_will_reach_your_destination_in_mins), "" + timeTOReachInMins), "Info");
 
                         double distance = CONST.distance(latitude, longitude,
                                 CONST.DESTINATION_LAT, CONST.DESTINATION_LONG, "K");
 
-                        if (distance >=.200 && distance < .400 && !is400MNotificationShown) {
+                        if (distance >= .200 && distance < .400 && !is400MNotificationShown) {
 
-                            CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
-                                    String.format(getString(R.string.you_will_reach_400m),""+(int)(distance*1000)), "Info");
+                            setGeoFencing("" + latitude, "" + longitude);
+
+                            if (Paper.book().read(CONST.DISTANCE_NOTIFICATION, false))
+                                CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
+                                        String.format(getString(R.string.you_will_reach_400m), "" + (int) (distance * 1000)), "Info");
 
                             is400MNotificationShown = true;
 
                         } else if (distance > .03 && distance < .200 && !is200MNotificationShown) {
 
-                            CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
-                                    getString(R.string.you_will_reach_200m), "Info");
+                            setGeoFencing("" + latitude, "" + longitude);
+
+                            if (Paper.book().read(CONST.DISTANCE_NOTIFICATION, false))
+                                CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
+                                        getString(R.string.you_will_reach_200m), "Info");
 
                             is200MNotificationShown = true;
 
                         } else if (distance < .03 && !isWelcomeNotificationShown) {
                             //start indoor navigation detection
+
+                            setGeoFencing("" + latitude, "" + longitude);
 
                             CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
                                     getString(R.string.welcome_message), "Info");
@@ -236,15 +297,17 @@ public class ScheduleMeetingProcessService extends JobService implements GoogleA
                         //show notification for late for meeting
                         notificationCount++;
 
-                        if(notificationCount==1){
-                            CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
-                                    getString(R.string.you_will_be_late), "Info");
-                        }else if(notificationCount==2){
-                            CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
-                                    getString(R.string.you_are_running_late), "Info");
-                        }else {
+                        if (Paper.book().read(CONST.DISTANCE_NOTIFICATION, false)) {
+                            if (notificationCount == 1) {
+                                CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
+                                        getString(R.string.you_will_be_late), "Info");
+                            } else if (notificationCount == 2) {
+                                CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
+                                        getString(R.string.you_are_running_late), "Info");
+                            } else {
                                 CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
                                         getString(R.string.you_will_late_and_reschedule), "Info");
+                            }
                         }
                         //jobFinished(parameters, false);
                     }
@@ -294,26 +357,36 @@ public class ScheduleMeetingProcessService extends JobService implements GoogleA
                 ScheduleMeetingProcessService.this.longitude = mLocation.getLongitude();
 
                 if (isAbleToReach) {
-                    if (meetingDetail != null) {
+                    UserData userData = Paper.book().read(NetworkUtility.USER_INFO);
+
+                    if (meetingDetail != null && userData != null && userData.getUsertype().equalsIgnoreCase("Guest")) {
                         Date meetingDateTime = dateFormat.parse(meetingDetail.getFdate() + " " + meetingDetail.getTotime());
 
                         if (new Date().compareTo(meetingDateTime) < 0) {
-                            if (distance >=.200 && distance < .400 && !is400MNotificationShown) {
+                            if (distance >= .200 && distance < .400 && !is400MNotificationShown) {
 
-                                CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
-                                        String.format(getString(R.string.you_will_reach_400m),""+(int)(distance*1000)), "Info");
+                                setGeoFencing("" + latitude, "" + longitude);
+
+                                if (Paper.book().read(CONST.DISTANCE_NOTIFICATION, false))
+                                    CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
+                                            String.format(getString(R.string.you_will_reach_400m), "" + (int) (distance * 1000)), "Info");
 
                                 is400MNotificationShown = true;
 
                             } else if (distance > .03 && distance < .200 && !is200MNotificationShown) {
 
-                                CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
-                                        getString(R.string.you_will_reach_200m), "Info");
+                                setGeoFencing("" + latitude, "" + longitude);
+
+                                if (Paper.book().read(CONST.DISTANCE_NOTIFICATION, false))
+                                    CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
+                                            getString(R.string.you_will_reach_200m), "Info");
 
                                 is200MNotificationShown = true;
 
                             } else if (distance < .03 && !isWelcomeNotificationShown) {
                                 //start indoor navigation detection
+                                setGeoFencing("" + latitude, "" + longitude);
+
                                 CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
                                         getString(R.string.welcome_message), "Info");
 
@@ -374,26 +447,35 @@ public class ScheduleMeetingProcessService extends JobService implements GoogleA
                 ScheduleMeetingProcessService.this.longitude = location.getLongitude();
 
                 if (isAbleToReach) {
-                    if (meetingDetail != null) {
+                    UserData userData = Paper.book().read(NetworkUtility.USER_INFO);
+
+                    if (meetingDetail != null && userData != null && userData.getUsertype().equalsIgnoreCase("Guest")) {
                         Date meetingDateTime = dateFormat.parse(meetingDetail.getFdate() + " " + meetingDetail.getTotime());
 
                         if (new Date().compareTo(meetingDateTime) < 0) {
-                            if (distance >=.200 && distance < .400 && !is400MNotificationShown) {
+                            if (distance >= .200 && distance < .400 && !is400MNotificationShown) {
 
-                                CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
-                                        String.format(getString(R.string.you_will_reach_400m),""+(int)(distance*1000)), "Info");
+                                setGeoFencing("" + latitude, "" + longitude);
+
+                                if (Paper.book().read(CONST.DISTANCE_NOTIFICATION, false))
+                                    CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
+                                            String.format(getString(R.string.you_will_reach_400m), "" + (int) (distance * 1000)), "Info");
 
                                 is400MNotificationShown = true;
 
                             } else if (distance > .03 && distance < .200 && !is200MNotificationShown) {
 
-                                CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
-                                        getString(R.string.you_will_reach_200m), "Info");
+                                setGeoFencing("" + latitude, "" + longitude);
+
+                                if (Paper.book().read(CONST.DISTANCE_NOTIFICATION, false))
+                                    CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
+                                            getString(R.string.you_will_reach_200m), "Info");
 
                                 is200MNotificationShown = true;
 
                             } else if (distance < .03 && !isWelcomeNotificationShown) {
                                 //start indoor navigation detection
+                                setGeoFencing("" + latitude, "" + longitude);
 
                                 CONST.showNotifications(getApplicationContext(), getString(R.string.app_name),
                                         getString(R.string.welcome_message), "Info");

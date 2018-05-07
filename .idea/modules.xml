@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/SmartOffice_TCS-master.iml" filepath="$PROJECT_DIR$/SmartOffice_TCS-master.iml" />
+      <module fileurl="file://C:\Users\FNSPL\Desktop\JW_Merriot_Demos\SmartOffice_TCS-master\SmartOffice_TCS-master.iml" filepath="C:\Users\FNSPL\Desktop\JW_Merriot_Demos\SmartOffice_TCS-master\SmartOffice_TCS-master.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://C:\Users\FNSPL\Desktop\JW_Merriot_Demos\SmartOffice_TCS-master\app\app.iml" filepath="C:\Users\FNSPL\Desktop\JW_Merriot_Demos\SmartOffice_TCS-master\app\app.iml" />
     </modules>
   </component>
 </project>

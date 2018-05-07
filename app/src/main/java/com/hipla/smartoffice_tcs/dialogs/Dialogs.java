@@ -48,7 +48,7 @@ public class Dialogs {
         dialog.setCanceledOnTouchOutside(false);
         dialog.setCancelable(false);
 
-        dialog.show();
+        //dialog.show();
 
         ListView roomsList = (ListView) dialog.findViewById(R.id.listview_rooms);
         Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);
@@ -202,11 +202,13 @@ public class Dialogs {
     public static void dialogShowDates(Context context,String startDate, String endDate,
                                        final OnDateSelect _callback) {
 
-        final Dialog dialog = new Dialog(context, R.style.dialog);
-        dialog.setContentView(R.layout.dialog_all_rooms);
-        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_animation;
-        dialog.getWindow().setLayout(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        View modalbottomsheet = ((Activity)context).getLayoutInflater().inflate(R.layout.dialog_meeting_dates, null);
+
+        final BottomSheetDialog dialog = new BottomSheetDialog(context);
+        dialog.setContentView(modalbottomsheet);
         dialog.setCanceledOnTouchOutside(false);
+        dialog.setCancelable(false);
+
 
         ListView roomsList = (ListView) dialog.findViewById(R.id.listview_rooms);
         Button btn_cancel = (Button) dialog.findViewById(R.id.btn_cancel);

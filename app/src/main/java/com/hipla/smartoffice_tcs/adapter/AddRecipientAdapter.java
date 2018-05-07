@@ -16,8 +16,8 @@ import java.util.List;
 
 public class AddRecipientAdapter extends RecyclerView.Adapter<AddRecipientAdapter.MyHolderView> {
 
-    List<AddRecipientsModel> recipientList ;
-    AddRecipientAdapter.ManageRecipientCallback manageRowCallback ;
+    private List<AddRecipientsModel> recipientList ;
+    private AddRecipientAdapter.ManageRecipientCallback manageRowCallback ;
 
 
     public AddRecipientAdapter(AddRecipientAdapter.ManageRecipientCallback callback  , List<AddRecipientsModel> recipientList){
@@ -42,7 +42,7 @@ public class AddRecipientAdapter extends RecyclerView.Adapter<AddRecipientAdapte
 
     @Override
     public int getItemCount() {
-        return 0;
+        return recipientList.size();
     }
 
     public class MyHolderView extends RecyclerView.ViewHolder{
@@ -83,4 +83,10 @@ public class AddRecipientAdapter extends RecyclerView.Adapter<AddRecipientAdapte
             manageRowCallback.onRemoveRecipient(position);
 
     }
+
+    public void notifyDataChange(List<AddRecipientsModel> recipientList){
+        this.recipientList = recipientList;
+        notifyDataSetChanged();
+    }
+
 }

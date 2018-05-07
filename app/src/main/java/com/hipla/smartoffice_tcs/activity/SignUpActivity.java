@@ -46,9 +46,6 @@ public class SignUpActivity extends BaseActivity implements StringRequestListene
         pDialog.setMessage("Please wait...");
         pDialog.setCancelable(false);
 
-        Typeface tf = Typeface.createFromAsset(getAssets(),
-                "fonts/HelveticaNeue Light.ttf");
-
     }
 
     public void selectGuest(){
